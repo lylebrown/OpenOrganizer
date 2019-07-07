@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using OpenOrganizerAPI.Models;
 
 namespace OpenOrganizerAPI.Controllers
 {
@@ -12,9 +13,22 @@ namespace OpenOrganizerAPI.Controllers
     {
         // GET api/values
         [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        public ActionResult<List<Category>> Get()
         {
-            return new string[] { "value1", "value2" };
+            //return new string[] { "value1", "value2" };
+            List<Category> myList = new List<Category>();
+            using (var dataContext = new APIDBContext())
+            {
+                dataContext.Categories.Add(new Models.Category() { Name = "Car" });
+                dataContext.Categories.Add(new Models.Category() { Name = "Cables" });
+                dataContext.Categories.Add(new Models.Category() { Name = "Electronics" });
+
+                dataContext.SaveChanges();
+
+                myList = dataContext.Categories.AsQueryable().ToList();
+
+                return myList;
+            }
         }
 
         // GET api/values/5
