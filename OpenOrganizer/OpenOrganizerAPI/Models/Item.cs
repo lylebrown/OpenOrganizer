@@ -11,6 +11,8 @@ namespace OpenOrganizerAPI.Models
         public string Title { get; set; }
         public string Description { get; set; }
         public int CategoryID { get; set; }
+        public Category Category { get; set; }
         public int LocationID { get; set; }
+        public Location Location { get; set; }
     }
 }
