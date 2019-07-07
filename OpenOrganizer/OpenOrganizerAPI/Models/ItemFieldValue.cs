@@ -7,6 +7,7 @@ namespace OpenOrganizerAPI.Models
 {
     public class ItemFieldValue
     {
+        public int ID { get; set; }
         public int ItemId { get; set; }
         public int FieldId { get; set; }
         public string Value { get; set; }

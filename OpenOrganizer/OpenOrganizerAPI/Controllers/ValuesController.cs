@@ -19,11 +19,11 @@ namespace OpenOrganizerAPI.Controllers
             List<Category> myList = new List<Category>();
             using (var dataContext = new APIDBContext())
             {
-                dataContext.Categories.Add(new Models.Category() { Name = "Car" });
+                /*dataContext.Categories.Add(new Models.Category() { Name = "Car" });
                 dataContext.Categories.Add(new Models.Category() { Name = "Cables" });
                 dataContext.Categories.Add(new Models.Category() { Name = "Electronics" });
 
-                dataContext.SaveChanges();
+                dataContext.SaveChanges();*/
 
                 myList = dataContext.Categories.AsQueryable().ToList();
 

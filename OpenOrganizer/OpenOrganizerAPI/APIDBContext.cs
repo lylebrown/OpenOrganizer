@@ -15,7 +15,7 @@ namespace OpenOrganizerAPI
             if (!_created)
             {
                 _created = true;
-                Database.EnsureDeleted();
+                //Database.EnsureDeleted();
                 Database.EnsureCreated();
             }
         }
@@ -25,5 +25,12 @@ namespace OpenOrganizerAPI
         }
 
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Item> Items { get; set; }
+        public DbSet<ItemAttachment> ItemAttachments { get; set; }
+        public DbSet<ItemField> ItemFields { get; set; }
+        public DbSet<ItemFieldValue> ItemFieldValues { get; set; }
+        public DbSet<ItemTag> ItemTags { get; set; }
+        public DbSet<Location> Locations { get; set; }
+        public DbSet<Tag> Tags { get; set; }
     }
 }
