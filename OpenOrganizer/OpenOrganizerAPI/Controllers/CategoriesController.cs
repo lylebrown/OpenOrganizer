@@ -40,5 +40,43 @@ namespace OpenOrganizerAPI.Controllers
                 return categoryItem;
             }
         }
+
+        // POST api/categories
+        [HttpPost]
+        public void Post([FromBody] Category category)
+        {
+            // TODO: Add data validation
+            using (var dataContext = new APIDBContext())
+            {
+                dataContext.Categories.Add(category);
+                dataContext.SaveChanges();
+            }
+        }
+
+        // PUT api/categories/{id}
+        [HttpPut("{id}")]
+        public void Put(int id, [FromBody] Category category)
+        {
+            // TODO: Add data validation
+            category.ID = id;
+            using (var dataContext = new APIDBContext())
+            {
+                dataContext.Categories.Update(category);
+                dataContext.SaveChanges();
+            }
+        }
+
+        // DELETE api/categories/{id}
+        [HttpDelete("{id}")]
+        public void Delete(int id)
+        {
+            Category category = new Category();
+            category.ID = id;
+            using (var dataContext = new APIDBContext())
+            {
+                dataContext.Remove(category);
+                dataContext.SaveChanges();
+            }
+        }
     }
 }
