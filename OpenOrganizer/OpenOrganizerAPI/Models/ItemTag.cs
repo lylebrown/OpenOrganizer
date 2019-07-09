@@ -8,9 +8,9 @@ namespace OpenOrganizerAPI.Models
     public class ItemTag
     {
         public int ID { get; set; }
-        public int ItemID { get; set; }
+        //public int ItemID { get; set; }
         public Item Item { get; set; }
-        public int TagID { get; set; }
+        //public int TagID { get; set; }
         public Tag Tag { get; set; }
     }
 }

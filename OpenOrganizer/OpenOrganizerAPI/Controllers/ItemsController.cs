@@ -41,6 +41,22 @@ namespace OpenOrganizerAPI.Controllers
             }
         }
 
+        [Route("{id}/full")]
+        public ActionResult<Item> GetFull(int id)
+        {
+            using (var dataContext = new APIDBContext())
+            {
+                var itemItem = dataContext.Items.Find(id);
+
+                if (itemItem == null)
+                {
+                    return NotFound();
+                }
+
+                return itemItem;
+            }
+        }
+
         // POST api/items
         [HttpPost]
         public void Post([FromBody] Item item)

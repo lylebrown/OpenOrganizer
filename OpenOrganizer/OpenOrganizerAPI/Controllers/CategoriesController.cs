@@ -53,6 +53,20 @@ namespace OpenOrganizerAPI.Controllers
             }
         }
 
+        // POST api/categories/childof/{id}
+        // Allows for child categories to be created with the specified parent ID
+        [Route("childof/{id}")]
+        [HttpPost("{id}")]
+        public void PostChild(int id, [FromBody] Category category)
+        {
+            using (var dataContext = new APIDBContext())
+            {
+                category.Parent = dataContext.Categories.Find(id);
+                dataContext.Categories.Add(category);
+                dataContext.SaveChanges();
+            }
+        }
+
         // PUT api/categories/{id}
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] Category category)

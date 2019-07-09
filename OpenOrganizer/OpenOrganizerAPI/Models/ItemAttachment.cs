@@ -12,7 +12,7 @@ namespace OpenOrganizerAPI.Models
         public string Name { get; set; }
         public string MimeType { get; set; }
         public byte[] File { get; set; }
-        public int LinkedItemID { get; set; }
+        //public int LinkedItemID { get; set; }
         public Item LinkedItem { get; set; }
     }
 }
