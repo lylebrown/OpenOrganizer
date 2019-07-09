@@ -9,72 +9,72 @@ namespace OpenOrganizerAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CategoriesController : ControllerBase
+    public class LocationsController : ControllerBase
     {
-        // GET api/categories
+        // GET api/locations
         [HttpGet]
-        public ActionResult<List<Category>> Get()
+        public ActionResult<List<Location>> Get()
         {
-            List<Category> dataCategories = new List<Category>();
+            List<Location> dataLocations = new List<Location>();
             using (var dataContext = new APIDBContext())
             {
-                dataCategories = dataContext.Categories.AsQueryable().ToList();
+                dataLocations = dataContext.Locations.AsQueryable().ToList();
 
-                return dataCategories;
+                return dataLocations;
             }
         }
 
-        // GET api/categories/{id}
+        // GET api/locations/{id}
         [HttpGet("{id}")]
-        public ActionResult<Category> Get(int id)
+        public ActionResult<Location> Get(int id)
         {
             using (var dataContext = new APIDBContext())
             {
-                var categoryItem = dataContext.Categories.Find(id);
+                var itemLocation = dataContext.Locations.Find(id);
 
-                if (categoryItem == null)
+                if (itemLocation == null)
                 {
                     return NotFound();
                 }
 
-                return categoryItem;
+                return itemLocation;
             }
         }
 
-        // POST api/categories
+        // POST api/locations
         [HttpPost]
-        public void Post([FromBody] Category category)
+        public void Post([FromBody] Location location)
         {
             // TODO: Add data validation
             using (var dataContext = new APIDBContext())
             {
-                dataContext.Categories.Add(category);
+                dataContext.Locations.Add(location);
                 dataContext.SaveChanges();
             }
         }
 
-        // PUT api/categories/{id}
+        // PUT api/locations/{id}
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] Category category)
+        public void Put(int id, [FromBody] Location location)
         {
             // TODO: Add data validation
-            category.ID = id;
+            location.ID = id;
             using (var dataContext = new APIDBContext())
             {
-                dataContext.Categories.Update(category);
+                dataContext.Locations.Update(location);
                 dataContext.SaveChanges();
             }
         }
 
-        // DELETE api/categories/{id}
+        // DELETE api/locations/{id}
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
-            Category category = new Category();
-            category.ID = id;
+            Location location = new Location();
+            location.ID = id;
             using (var dataContext = new APIDBContext())
             {
-                dataContext.Categories.Remove(category);
+                dataContext.Locations.Remove(location);
                 dataContext.SaveChanges();
             }
         }

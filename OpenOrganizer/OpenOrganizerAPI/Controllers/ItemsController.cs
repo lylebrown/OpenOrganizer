@@ -9,72 +9,72 @@ namespace OpenOrganizerAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CategoriesController : ControllerBase
+    public class ItemsController : ControllerBase
     {
-        // GET api/categories
+        // GET api/items
         [HttpGet]
-        public ActionResult<List<Category>> Get()
+        public ActionResult<List<Item>> Get()
         {
-            List<Category> dataCategories = new List<Category>();
+            List<Item> dataItems = new List<Item>();
             using (var dataContext = new APIDBContext())
             {
-                dataCategories = dataContext.Categories.AsQueryable().ToList();
+                dataItems = dataContext.Items.AsQueryable().ToList();
 
-                return dataCategories;
+                return dataItems;
             }
         }
 
-        // GET api/categories/{id}
+        // GET api/items/{id}
         [HttpGet("{id}")]
-        public ActionResult<Category> Get(int id)
+        public ActionResult<Item> Get(int id)
         {
             using (var dataContext = new APIDBContext())
             {
-                var categoryItem = dataContext.Categories.Find(id);
+                var itemItem = dataContext.Items.Find(id);
 
-                if (categoryItem == null)
+                if (itemItem == null)
                 {
                     return NotFound();
                 }
 
-                return categoryItem;
+                return itemItem;
             }
         }
 
-        // POST api/categories
+        // POST api/items
         [HttpPost]
-        public void Post([FromBody] Category category)
+        public void Post([FromBody] Item item)
         {
             // TODO: Add data validation
             using (var dataContext = new APIDBContext())
             {
-                dataContext.Categories.Add(category);
+                dataContext.Items.Add(item);
                 dataContext.SaveChanges();
             }
         }
 
-        // PUT api/categories/{id}
+        // PUT api/items/{id}
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] Category category)
+        public void Put(int id, [FromBody] Item item)
         {
             // TODO: Add data validation
-            category.ID = id;
+            item.ID = id;
             using (var dataContext = new APIDBContext())
             {
-                dataContext.Categories.Update(category);
+                dataContext.Items.Update(item);
                 dataContext.SaveChanges();
             }
         }
 
-        // DELETE api/categories/{id}
+        // DELETE api/items/{id}
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
-            Category category = new Category();
-            category.ID = id;
+            Item item = new Item();
+            item.ID = id;
             using (var dataContext = new APIDBContext())
             {
-                dataContext.Categories.Remove(category);
+                dataContext.Items.Remove(item);
                 dataContext.SaveChanges();
             }
         }

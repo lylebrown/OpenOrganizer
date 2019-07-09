@@ -9,72 +9,72 @@ namespace OpenOrganizerAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CategoriesController : ControllerBase
+    public class TagsController : ControllerBase
     {
-        // GET api/categories
+        // GET api/tags
         [HttpGet]
-        public ActionResult<List<Category>> Get()
+        public ActionResult<List<Tag>> Get()
         {
-            List<Category> dataCategories = new List<Category>();
+            List<Tag> dataTags = new List<Tag>();
             using (var dataContext = new APIDBContext())
             {
-                dataCategories = dataContext.Categories.AsQueryable().ToList();
+                dataTags = dataContext.Tags.AsQueryable().ToList();
 
-                return dataCategories;
+                return dataTags;
             }
         }
 
-        // GET api/categories/{id}
+        // GET api/tags/{id}
         [HttpGet("{id}")]
-        public ActionResult<Category> Get(int id)
+        public ActionResult<Tag> Get(int id)
         {
             using (var dataContext = new APIDBContext())
             {
-                var categoryItem = dataContext.Categories.Find(id);
+                var tagsItem = dataContext.Tags.Find(id);
 
-                if (categoryItem == null)
+                if (tagsItem == null)
                 {
                     return NotFound();
                 }
 
-                return categoryItem;
+                return tagsItem;
             }
         }
 
-        // POST api/categories
+        // POST api/tags
         [HttpPost]
-        public void Post([FromBody] Category category)
+        public void Post([FromBody] Tag tag)
         {
             // TODO: Add data validation
             using (var dataContext = new APIDBContext())
             {
-                dataContext.Categories.Add(category);
+                dataContext.Tags.Add(tag);
                 dataContext.SaveChanges();
             }
         }
 
-        // PUT api/categories/{id}
+        // PUT api/tags/{id}
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] Category category)
+        public void Put(int id, [FromBody] Tag tag)
         {
             // TODO: Add data validation
-            category.ID = id;
+            tag.ID = id;
             using (var dataContext = new APIDBContext())
             {
-                dataContext.Categories.Update(category);
+                dataContext.Tags.Update(tag);
                 dataContext.SaveChanges();
             }
         }
 
-        // DELETE api/categories/{id}
+        // DELETE api/tags/{id}
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
-            Category category = new Category();
-            category.ID = id;
+            Tag tag = new Tag();
+            tag.ID = id;
             using (var dataContext = new APIDBContext())
             {
-                dataContext.Categories.Remove(category);
+                dataContext.Tags.Remove(tag);
                 dataContext.SaveChanges();
             }
         }

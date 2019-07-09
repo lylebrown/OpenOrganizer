@@ -9,72 +9,72 @@ namespace OpenOrganizerAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CategoriesController : ControllerBase
+    public class ItemAttachmentsController : ControllerBase
     {
-        // GET api/categories
+        // GET api/itemattachments
         [HttpGet]
-        public ActionResult<List<Category>> Get()
+        public ActionResult<List<ItemAttachment>> Get()
         {
-            List<Category> dataCategories = new List<Category>();
+            List<ItemAttachment> dataAttachments = new List<ItemAttachment>();
             using (var dataContext = new APIDBContext())
             {
-                dataCategories = dataContext.Categories.AsQueryable().ToList();
+                dataAttachments = dataContext.ItemAttachments.AsQueryable().ToList();
 
-                return dataCategories;
+                return dataAttachments;
             }
         }
 
-        // GET api/categories/{id}
+        // GET api/itemattachments/{id}
         [HttpGet("{id}")]
-        public ActionResult<Category> Get(int id)
+        public ActionResult<ItemAttachment> Get(int id)
         {
             using (var dataContext = new APIDBContext())
             {
-                var categoryItem = dataContext.Categories.Find(id);
+                var attachmentItem = dataContext.ItemAttachments.Find(id);
 
-                if (categoryItem == null)
+                if (attachmentItem == null)
                 {
                     return NotFound();
                 }
 
-                return categoryItem;
+                return attachmentItem;
             }
         }
 
-        // POST api/categories
+        // POST api/itemattachments
         [HttpPost]
-        public void Post([FromBody] Category category)
+        public void Post([FromBody] ItemAttachment attachment)
         {
             // TODO: Add data validation
             using (var dataContext = new APIDBContext())
             {
-                dataContext.Categories.Add(category);
+                dataContext.ItemAttachments.Add(attachment);
                 dataContext.SaveChanges();
             }
         }
 
-        // PUT api/categories/{id}
+        // PUT api/itemattachments/{id}
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] Category category)
+        public void Put(int id, [FromBody] ItemAttachment attachment)
         {
             // TODO: Add data validation
-            category.ID = id;
+            attachment.ID = id;
             using (var dataContext = new APIDBContext())
             {
-                dataContext.Categories.Update(category);
+                dataContext.ItemAttachments.Update(attachment);
                 dataContext.SaveChanges();
             }
         }
 
-        // DELETE api/categories/{id}
+        // DELETE api/itemattachments/{id}
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
-            Category category = new Category();
-            category.ID = id;
+            ItemAttachment attachment = new ItemAttachment();
+            attachment.ID = id;
             using (var dataContext = new APIDBContext())
             {
-                dataContext.Categories.Remove(category);
+                dataContext.ItemAttachments.Remove(attachment);
                 dataContext.SaveChanges();
             }
         }

@@ -9,72 +9,72 @@ namespace OpenOrganizerAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CategoriesController : ControllerBase
+    public class ItemFieldValuesController : ControllerBase
     {
-        // GET api/categories
+        // GET api/itemfieldvalues
         [HttpGet]
-        public ActionResult<List<Category>> Get()
+        public ActionResult<List<ItemFieldValue>> Get()
         {
-            List<Category> dataCategories = new List<Category>();
+            List<ItemFieldValue> dataValues = new List<ItemFieldValue>();
             using (var dataContext = new APIDBContext())
             {
-                dataCategories = dataContext.Categories.AsQueryable().ToList();
+                dataValues = dataContext.ItemFieldValues.AsQueryable().ToList();
 
-                return dataCategories;
+                return dataValues;
             }
         }
 
-        // GET api/categories/{id}
+        // GET api/itemfieldvalues/{id}
         [HttpGet("{id}")]
-        public ActionResult<Category> Get(int id)
+        public ActionResult<ItemFieldValue> Get(int id)
         {
             using (var dataContext = new APIDBContext())
             {
-                var categoryItem = dataContext.Categories.Find(id);
+                var itemValue = dataContext.ItemFieldValues.Find(id);
 
-                if (categoryItem == null)
+                if (itemValue == null)
                 {
                     return NotFound();
                 }
 
-                return categoryItem;
+                return itemValue;
             }
         }
 
-        // POST api/categories
+        // POST api/itemfieldvalues
         [HttpPost]
-        public void Post([FromBody] Category category)
+        public void Post([FromBody] ItemFieldValue value)
         {
             // TODO: Add data validation
             using (var dataContext = new APIDBContext())
             {
-                dataContext.Categories.Add(category);
+                dataContext.ItemFieldValues.Add(value);
                 dataContext.SaveChanges();
             }
         }
 
-        // PUT api/categories/{id}
+        // PUT api/itemfieldvalues/{id}
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] Category category)
+        public void Put(int id, [FromBody] ItemFieldValue value)
         {
             // TODO: Add data validation
-            category.ID = id;
+            value.ID = id;
             using (var dataContext = new APIDBContext())
             {
-                dataContext.Categories.Update(category);
+                dataContext.ItemFieldValues.Update(value);
                 dataContext.SaveChanges();
             }
         }
 
-        // DELETE api/categories/{id}
+        // DELETE api/itemfieldvalues/{id}
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
-            Category category = new Category();
-            category.ID = id;
+            ItemFieldValue value = new ItemFieldValue();
+            value.ID = id;
             using (var dataContext = new APIDBContext())
             {
-                dataContext.Categories.Remove(category);
+                dataContext.ItemFieldValues.Remove(value);
                 dataContext.SaveChanges();
             }
         }
