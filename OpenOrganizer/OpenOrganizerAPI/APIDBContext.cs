@@ -15,7 +15,7 @@ namespace OpenOrganizerAPI
             if (!_created)
             {
                 _created = true;
-                Database.EnsureDeleted();
+                //Database.EnsureDeleted();
                 Database.EnsureCreated();
             }
         }

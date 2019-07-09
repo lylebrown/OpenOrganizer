@@ -53,6 +53,20 @@ namespace OpenOrganizerAPI.Controllers
             }
         }
 
+        // POST api/locations/childof/{id}
+        // Allows for child locations to be created with the specified parent ID
+        [Route("childof/{id}")]
+        [HttpPost("{id}")]
+        public void PostChild(int id, [FromBody] Location location)
+        {
+            using (var dataContext = new APIDBContext())
+            {
+                location.Parent = dataContext.Locations.Find(id);
+                dataContext.Locations.Add(location);
+                dataContext.SaveChanges();
+            }
+        }
+
         // PUT api/locations/{id}
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] Location location)
