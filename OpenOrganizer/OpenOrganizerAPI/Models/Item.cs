@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -11,8 +12,10 @@ namespace OpenOrganizerAPI.Models
         public string Title { get; set; }
         public string Description { get; set; }
         //public int CategoryID { get; set; }
+        [ForeignKey("CategoryID")]
         public Category Category { get; set; }
         //public int LocationID { get; set; }
+        [ForeignKey("LocationID")]
         public Location Location { get; set; }
     }
 }
