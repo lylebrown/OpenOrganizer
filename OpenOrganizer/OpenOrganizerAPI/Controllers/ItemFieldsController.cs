@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using OpenOrganizerAPI.Models;
 using System;
 using System.Collections.Generic;
@@ -18,7 +19,11 @@ namespace OpenOrganizerAPI.Controllers
             List<ItemField> dataFields = new List<ItemField>();
             using (var dataContext = new APIDBContext())
             {
-                dataFields = dataContext.ItemFields.AsQueryable().ToList();
+                dataFields = dataContext.ItemFields
+                    .Include(field => field.Category)
+                        .ThenInclude(cat => cat.Parent)
+                            .ThenInclude(cat => cat.Parent)
+                    .ToList();
 
                 return dataFields;
             }
@@ -30,7 +35,11 @@ namespace OpenOrganizerAPI.Controllers
         {
             using (var dataContext = new APIDBContext())
             {
-                var itemFieldItem = dataContext.ItemFields.Find(id);
+                var itemFieldItem = dataContext.ItemFields
+                    .Include(field => field.Category)
+                        .ThenInclude(cat => cat.Parent)
+                            .ThenInclude(cat => cat.Parent)
+                    .SingleOrDefault(x => x.ID == id);
 
                 if (itemFieldItem == null)
                 {
@@ -48,6 +57,9 @@ namespace OpenOrganizerAPI.Controllers
             // TODO: Add data validation
             using (var dataContext = new APIDBContext())
             {
+                int categoryQuery = Convert.ToInt32(HttpContext.Request.Query["Category"]);
+
+                itemField.Category = dataContext.Categories.Find(categoryQuery);
                 dataContext.ItemFields.Add(itemField);
                 dataContext.SaveChanges();
             }
@@ -61,6 +73,9 @@ namespace OpenOrganizerAPI.Controllers
             itemField.ID = id;
             using (var dataContext = new APIDBContext())
             {
+                int categoryQuery = Convert.ToInt32(HttpContext.Request.Query["Category"]);
+
+                itemField.Category = dataContext.Categories.Find(categoryQuery);
                 dataContext.ItemFields.Update(itemField);
                 dataContext.SaveChanges();
             }

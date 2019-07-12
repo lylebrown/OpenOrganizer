@@ -17,5 +17,7 @@ namespace OpenOrganizerAPI.Models
         //public int LocationID { get; set; }
         [ForeignKey("LocationID")]
         public Location Location { get; set; }
+        // TODO: Add attachment handling
+        //public List<ItemAttachment> Attachments { get; set; }
     }
 }
