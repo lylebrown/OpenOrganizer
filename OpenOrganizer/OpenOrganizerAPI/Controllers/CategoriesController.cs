@@ -11,34 +11,20 @@ namespace OpenOrganizerAPI.Controllers
     [ApiController]
     public class CategoriesController : ControllerBase
     {
+        private readonly APIDBContext db = new APIDBContext();
         // GET api/categories
         [HttpGet]
         public ActionResult<List<Category>> Get()
         {
-            List<Category> dataCategories = new List<Category>();
-            using (var dataContext = new APIDBContext())
-            {
-                dataCategories = dataContext.Categories.AsQueryable().ToList();
-
-                return dataCategories;
-            }
+            return db.Categories.ToList();
         }
 
         // GET api/categories/{id}
         [HttpGet("{id}")]
         public ActionResult<Category> Get(int id)
         {
-            using (var dataContext = new APIDBContext())
-            {
-                var categoryItem = dataContext.Categories.Find(id);
-
-                if (categoryItem == null)
-                {
-                    return NotFound();
-                }
-
-                return categoryItem;
-            }
+            var categoryItem = db.Categories.Find(id);
+            return categoryItem == null ? NotFound() : new ActionResult<Category>(categoryItem);
         }
 
         // POST api/categories
@@ -46,11 +32,8 @@ namespace OpenOrganizerAPI.Controllers
         public void Post([FromBody] Category category)
         {
             // TODO: Add data validation
-            using (var dataContext = new APIDBContext())
-            {
-                dataContext.Categories.Add(category);
-                dataContext.SaveChanges();
-            }
+            db.Categories.Add(category);
+            db.SaveChanges();
         }
 
         // POST api/categories/childof/{id}
@@ -59,12 +42,9 @@ namespace OpenOrganizerAPI.Controllers
         [HttpPost("{id}")]
         public void PostChild(int id, [FromBody] Category category)
         {
-            using (var dataContext = new APIDBContext())
-            {
-                category.Parent = dataContext.Categories.Find(id);
-                dataContext.Categories.Add(category);
-                dataContext.SaveChanges();
-            }
+            category.Parent = db.Categories.Find(id);
+            db.Categories.Add(category);
+            db.SaveChanges();
         }
 
         // PUT api/categories/{id}
@@ -73,11 +53,8 @@ namespace OpenOrganizerAPI.Controllers
         {
             // TODO: Add data validation
             category.ID = id;
-            using (var dataContext = new APIDBContext())
-            {
-                dataContext.Categories.Update(category);
-                dataContext.SaveChanges();
-            }
+            db.Categories.Update(category);
+            db.SaveChanges();
         }
 
         // DELETE api/categories/{id}
@@ -86,11 +63,8 @@ namespace OpenOrganizerAPI.Controllers
         {
             Category category = new Category();
             category.ID = id;
-            using (var dataContext = new APIDBContext())
-            {
-                dataContext.Categories.Remove(category);
-                dataContext.SaveChanges();
-            }
+            db.Categories.Remove(category);
+            db.SaveChanges();
         }
     }
 }

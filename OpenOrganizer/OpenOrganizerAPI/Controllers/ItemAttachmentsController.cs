@@ -11,34 +11,26 @@ namespace OpenOrganizerAPI.Controllers
     [ApiController]
     public class ItemAttachmentsController : ControllerBase
     {
+        private readonly APIDBContext db = new APIDBContext();
         // GET api/itemattachments
         [HttpGet]
         public ActionResult<List<ItemAttachment>> Get()
         {
-            List<ItemAttachment> dataAttachments = new List<ItemAttachment>();
-            using (var dataContext = new APIDBContext())
-            {
-                dataAttachments = dataContext.ItemAttachments.AsQueryable().ToList();
-
-                return dataAttachments;
-            }
+            return db.ItemAttachments.ToList();
         }
 
         // GET api/itemattachments/{id}
         [HttpGet("{id}")]
         public ActionResult<ItemAttachment> Get(int id)
         {
-            using (var dataContext = new APIDBContext())
+            var attachmentItem = db.ItemAttachments.Find(id);
+
+            if (attachmentItem == null)
             {
-                var attachmentItem = dataContext.ItemAttachments.Find(id);
-
-                if (attachmentItem == null)
-                {
-                    return NotFound();
-                }
-
-                return attachmentItem;
+                return NotFound();
             }
+
+            return attachmentItem;
         }
 
         // POST api/itemattachments
@@ -46,11 +38,8 @@ namespace OpenOrganizerAPI.Controllers
         public void Post([FromBody] ItemAttachment attachment)
         {
             // TODO: Add data validation
-            using (var dataContext = new APIDBContext())
-            {
-                dataContext.ItemAttachments.Add(attachment);
-                dataContext.SaveChanges();
-            }
+            db.ItemAttachments.Add(attachment);
+            db.SaveChanges();
         }
 
         // PUT api/itemattachments/{id}
@@ -59,11 +48,8 @@ namespace OpenOrganizerAPI.Controllers
         {
             // TODO: Add data validation
             attachment.ID = id;
-            using (var dataContext = new APIDBContext())
-            {
-                dataContext.ItemAttachments.Update(attachment);
-                dataContext.SaveChanges();
-            }
+            db.ItemAttachments.Update(attachment);
+            db.SaveChanges();
         }
 
         // DELETE api/itemattachments/{id}
@@ -72,11 +58,8 @@ namespace OpenOrganizerAPI.Controllers
         {
             ItemAttachment attachment = new ItemAttachment();
             attachment.ID = id;
-            using (var dataContext = new APIDBContext())
-            {
-                dataContext.ItemAttachments.Remove(attachment);
-                dataContext.SaveChanges();
-            }
+            db.ItemAttachments.Remove(attachment);
+            db.SaveChanges();
         }
     }
 }

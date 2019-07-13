@@ -12,42 +12,34 @@ namespace OpenOrganizerAPI.Controllers
     [ApiController]
     public class ItemFieldsController : ControllerBase
     {
+        private readonly APIDBContext db = new APIDBContext();
         // GET api/itemfields
         [HttpGet]
         public ActionResult<List<ItemField>> Get()
         {
-            List<ItemField> dataFields = new List<ItemField>();
-            using (var dataContext = new APIDBContext())
-            {
-                dataFields = dataContext.ItemFields
-                    .Include(field => field.Category)
+            return db.ItemFields
+                .Include(field => field.Category)
+                    .ThenInclude(cat => cat.Parent)
                         .ThenInclude(cat => cat.Parent)
-                            .ThenInclude(cat => cat.Parent)
-                    .ToList();
-
-                return dataFields;
-            }
+                .ToList();
         }
 
         // GET api/itemfields/{id}
         [HttpGet("{id}")]
         public ActionResult<ItemField> Get(int id)
         {
-            using (var dataContext = new APIDBContext())
-            {
-                var itemFieldItem = dataContext.ItemFields
-                    .Include(field => field.Category)
+            var itemFieldItem = db.ItemFields
+                .Include(field => field.Category)
+                    .ThenInclude(cat => cat.Parent)
                         .ThenInclude(cat => cat.Parent)
-                            .ThenInclude(cat => cat.Parent)
-                    .SingleOrDefault(x => x.ID == id);
+                .SingleOrDefault(x => x.ID == id);
 
-                if (itemFieldItem == null)
-                {
-                    return NotFound();
-                }
-
-                return itemFieldItem;
+            if (itemFieldItem == null)
+            {
+                return NotFound();
             }
+
+            return itemFieldItem;
         }
 
         // POST api/itemfields
@@ -55,14 +47,11 @@ namespace OpenOrganizerAPI.Controllers
         public void Post([FromBody] ItemField itemField)
         {
             // TODO: Add data validation
-            using (var dataContext = new APIDBContext())
-            {
-                int categoryQuery = Convert.ToInt32(HttpContext.Request.Query["Category"]);
+            int categoryQuery = Convert.ToInt32(HttpContext.Request.Query["Category"]);
 
-                itemField.Category = dataContext.Categories.Find(categoryQuery);
-                dataContext.ItemFields.Add(itemField);
-                dataContext.SaveChanges();
-            }
+            itemField.Category = db.Categories.Find(categoryQuery);
+            db.ItemFields.Add(itemField);
+            db.SaveChanges();
         }
 
         // PUT api/itemfields/{id}
@@ -71,14 +60,11 @@ namespace OpenOrganizerAPI.Controllers
         {
             // TODO: Add data validation
             itemField.ID = id;
-            using (var dataContext = new APIDBContext())
-            {
-                int categoryQuery = Convert.ToInt32(HttpContext.Request.Query["Category"]);
+            int categoryQuery = Convert.ToInt32(HttpContext.Request.Query["Category"]);
 
-                itemField.Category = dataContext.Categories.Find(categoryQuery);
-                dataContext.ItemFields.Update(itemField);
-                dataContext.SaveChanges();
-            }
+            itemField.Category = db.Categories.Find(categoryQuery);
+            db.ItemFields.Update(itemField);
+            db.SaveChanges();
         }
 
         // DELETE api/itemfields/{id}
@@ -87,11 +73,8 @@ namespace OpenOrganizerAPI.Controllers
         {
             ItemField itemField = new ItemField();
             itemField.ID = id;
-            using (var dataContext = new APIDBContext())
-            {
-                dataContext.ItemFields.Remove(itemField);
-                dataContext.SaveChanges();
-            }
+            db.ItemFields.Remove(itemField);
+            db.SaveChanges();
         }
     }
 }
