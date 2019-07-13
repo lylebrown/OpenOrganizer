@@ -11,7 +11,11 @@ namespace OpenOrganizerAPI.Controllers
     [ApiController]
     public class CategoriesController : ControllerBase
     {
-        private readonly APIDBContext db = new APIDBContext();
+        private readonly APIDBContext db;
+        public CategoriesController(APIDBContext context)
+        {
+            db = context;
+        }
         // GET api/categories
         [HttpGet]
         public ActionResult<List<Category>> Get()

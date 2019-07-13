@@ -11,7 +11,11 @@ namespace OpenOrganizerAPI.Controllers
     [ApiController]
     public class ItemAttachmentsController : ControllerBase
     {
-        private readonly APIDBContext db = new APIDBContext();
+        private readonly APIDBContext db;
+        public ItemAttachmentsController(APIDBContext context)
+        {
+            db = context;
+        }
         // GET api/itemattachments
         [HttpGet]
         public ActionResult<List<ItemAttachment>> Get()
