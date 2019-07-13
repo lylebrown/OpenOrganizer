@@ -11,7 +11,11 @@ namespace OpenOrganizerAPI.Controllers
     [ApiController]
     public class LocationsController : ControllerBase
     {
-        private readonly APIDBContext db = new APIDBContext();
+        private readonly APIDBContext db;
+        public LocationsController(APIDBContext context)
+        {
+            db = context;
+        }
         // GET api/locations
         [HttpGet]
         public ActionResult<List<Location>> Get()

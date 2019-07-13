@@ -12,7 +12,11 @@ namespace OpenOrganizerAPI.Controllers
     [ApiController]
     public class ItemFieldsController : ControllerBase
     {
-        private readonly APIDBContext db = new APIDBContext();
+        private readonly APIDBContext db;
+        public ItemFieldsController(APIDBContext context)
+        {
+            db = context;
+        }
         // GET api/itemfields
         [HttpGet]
         public ActionResult<List<ItemField>> Get()

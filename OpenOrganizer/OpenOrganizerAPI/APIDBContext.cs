@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using OpenOrganizerAPI.Models;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ namespace OpenOrganizerAPI
     public class APIDBContext : DbContext
     {
         private static bool _created = false;
-        public APIDBContext()
+        public APIDBContext(DbContextOptions<APIDBContext> options) : base(options)
         {
             if (!_created)
             {
@@ -18,12 +19,8 @@ namespace OpenOrganizerAPI
                 //Database.EnsureDeleted();
                 Database.EnsureCreated();
             }
+            
         }
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlite(@"Data Source=L:\OpenOrganizer.db");
-        }
-
         public DbSet<Category> Categories { get; set; }
         public DbSet<Item> Items { get; set; }
         public DbSet<ItemAttachment> ItemAttachments { get; set; }

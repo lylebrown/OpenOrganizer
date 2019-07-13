@@ -11,7 +11,11 @@ namespace OpenOrganizerAPI.Controllers
     [ApiController]
     public class TagsController : ControllerBase
     {
-        private readonly APIDBContext db = new APIDBContext();
+        private readonly APIDBContext db;
+        public TagsController(APIDBContext context)
+        {
+            db = context;
+        }
         // GET api/tags
         [HttpGet]
         public ActionResult<List<Tag>> Get()
