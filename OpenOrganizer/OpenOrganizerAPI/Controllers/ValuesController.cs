@@ -11,24 +11,14 @@ namespace OpenOrganizerAPI.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
+        private readonly APIDBContext db = new APIDBContext();
         // GET api/values
         [HttpGet]
         public ActionResult<List<Category>> Get()
         {
-            //return new string[] { "value1", "value2" };
             List<Category> myList = new List<Category>();
-            using (var dataContext = new APIDBContext())
-            {
-                /*dataContext.Categories.Add(new Models.Category() { Name = "Car" });
-                dataContext.Categories.Add(new Models.Category() { Name = "Cables" });
-                dataContext.Categories.Add(new Models.Category() { Name = "Electronics" });
-
-                dataContext.SaveChanges();*/
-
-                myList = dataContext.Categories.AsQueryable().ToList();
-
-                return myList;
-            }
+            myList = db.Categories.ToList();
+            return myList;
         }
 
         // GET api/values/5

@@ -11,34 +11,28 @@ namespace OpenOrganizerAPI.Controllers
     [ApiController]
     public class ItemFieldValuesController : ControllerBase
     {
+        private readonly APIDBContext db = new APIDBContext();
         // GET api/itemfieldvalues
         [HttpGet]
         public ActionResult<List<ItemFieldValue>> Get()
         {
             List<ItemFieldValue> dataValues = new List<ItemFieldValue>();
-            using (var dataContext = new APIDBContext())
-            {
-                dataValues = dataContext.ItemFieldValues.AsQueryable().ToList();
-
-                return dataValues;
-            }
+            dataValues = db.ItemFieldValues.ToList();
+            return dataValues;
         }
 
         // GET api/itemfieldvalues/{id}
         [HttpGet("{id}")]
         public ActionResult<ItemFieldValue> Get(int id)
         {
-            using (var dataContext = new APIDBContext())
+            var itemValue = db.ItemFieldValues.Find(id);
+
+            if (itemValue == null)
             {
-                var itemValue = dataContext.ItemFieldValues.Find(id);
-
-                if (itemValue == null)
-                {
-                    return NotFound();
-                }
-
-                return itemValue;
+                return NotFound();
             }
+
+            return itemValue;
         }
 
         // POST api/itemfieldvalues
@@ -46,11 +40,8 @@ namespace OpenOrganizerAPI.Controllers
         public void Post([FromBody] ItemFieldValue value)
         {
             // TODO: Add data validation
-            using (var dataContext = new APIDBContext())
-            {
-                dataContext.ItemFieldValues.Add(value);
-                dataContext.SaveChanges();
-            }
+            db.ItemFieldValues.Add(value);
+            db.SaveChanges();
         }
 
         // PUT api/itemfieldvalues/{id}
@@ -59,11 +50,8 @@ namespace OpenOrganizerAPI.Controllers
         {
             // TODO: Add data validation
             value.ID = id;
-            using (var dataContext = new APIDBContext())
-            {
-                dataContext.ItemFieldValues.Update(value);
-                dataContext.SaveChanges();
-            }
+            db.ItemFieldValues.Update(value);
+            db.SaveChanges();
         }
 
         // DELETE api/itemfieldvalues/{id}
@@ -72,11 +60,8 @@ namespace OpenOrganizerAPI.Controllers
         {
             ItemFieldValue value = new ItemFieldValue();
             value.ID = id;
-            using (var dataContext = new APIDBContext())
-            {
-                dataContext.ItemFieldValues.Remove(value);
-                dataContext.SaveChanges();
-            }
+            db.ItemFieldValues.Remove(value);
+            db.SaveChanges();
         }
     }
 }

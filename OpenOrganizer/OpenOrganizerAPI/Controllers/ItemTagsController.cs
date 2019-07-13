@@ -11,34 +11,26 @@ namespace OpenOrganizerAPI.Controllers
     [ApiController]
     public class ItemTagsController : ControllerBase
     {
+        private readonly APIDBContext db = new APIDBContext();
         // GET api/itemtags
         [HttpGet]
         public ActionResult<List<ItemTag>> Get()
         {
-            List<ItemTag> dataTags = new List<ItemTag>();
-            using (var dataContext = new APIDBContext())
-            {
-                dataTags = dataContext.ItemTags.AsQueryable().ToList();
-
-                return dataTags;
-            }
+            return db.ItemTags.ToList();
         }
 
         // GET api/itemtags/{id}
         [HttpGet("{id}")]
         public ActionResult<ItemTag> Get(int id)
         {
-            using (var dataContext = new APIDBContext())
+            var itemTag = db.ItemTags.Find(id);
+
+            if (itemTag == null)
             {
-                var itemTag = dataContext.ItemTags.Find(id);
-
-                if (itemTag == null)
-                {
-                    return NotFound();
-                }
-
-                return itemTag;
+                return NotFound();
             }
+
+            return itemTag;
         }
 
         // POST api/itemtags
@@ -46,11 +38,8 @@ namespace OpenOrganizerAPI.Controllers
         public void Post([FromBody] ItemTag tag)
         {
             // TODO: Add data validation
-            using (var dataContext = new APIDBContext())
-            {
-                dataContext.ItemTags.Add(tag);
-                dataContext.SaveChanges();
-            }
+            db.ItemTags.Add(tag);
+            db.SaveChanges();
         }
 
         // PUT api/items/{id}
@@ -59,11 +48,8 @@ namespace OpenOrganizerAPI.Controllers
         {
             // TODO: Add data validation
             tag.ID = id;
-            using (var dataContext = new APIDBContext())
-            {
-                dataContext.ItemTags.Update(tag);
-                dataContext.SaveChanges();
-            }
+            db.ItemTags.Update(tag);
+            db.SaveChanges();
         }
 
         // DELETE api/items/{id}
@@ -72,11 +58,8 @@ namespace OpenOrganizerAPI.Controllers
         {
             ItemTag tag = new ItemTag();
             tag.ID = id;
-            using (var dataContext = new APIDBContext())
-            {
-                dataContext.ItemTags.Remove(tag);
-                dataContext.SaveChanges();
-            }
+            db.ItemTags.Remove(tag);
+            db.SaveChanges();
         }
     }
 }

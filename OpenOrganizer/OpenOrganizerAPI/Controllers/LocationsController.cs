@@ -11,46 +11,37 @@ namespace OpenOrganizerAPI.Controllers
     [ApiController]
     public class LocationsController : ControllerBase
     {
+        private readonly APIDBContext db = new APIDBContext();
         // GET api/locations
         [HttpGet]
         public ActionResult<List<Location>> Get()
         {
             List<Location> dataLocations = new List<Location>();
-            using (var dataContext = new APIDBContext())
-            {
-                dataLocations = dataContext.Locations.AsQueryable().ToList();
+            dataLocations = db.Locations.ToList();
 
-                return dataLocations;
-            }
+            return dataLocations;
         }
 
         // GET api/locations/{id}
         [HttpGet("{id}")]
         public ActionResult<Location> Get(int id)
         {
-            using (var dataContext = new APIDBContext())
+            var itemLocation = db.Locations.Find(id);
+
+            if (itemLocation == null)
             {
-                var itemLocation = dataContext.Locations.Find(id);
-
-                if (itemLocation == null)
-                {
-                    return NotFound();
-                }
-
-                return itemLocation;
+                return NotFound();
             }
+
+            return itemLocation;
         }
 
         // POST api/locations
         [HttpPost]
         public void Post([FromBody] Location location)
         {
-            // TODO: Add data validation
-            using (var dataContext = new APIDBContext())
-            {
-                dataContext.Locations.Add(location);
-                dataContext.SaveChanges();
-            }
+            db.Locations.Add(location);
+            db.SaveChanges();
         }
 
         // POST api/locations/childof/{id}
@@ -59,12 +50,9 @@ namespace OpenOrganizerAPI.Controllers
         [HttpPost("{id}")]
         public void PostChild(int id, [FromBody] Location location)
         {
-            using (var dataContext = new APIDBContext())
-            {
-                location.Parent = dataContext.Locations.Find(id);
-                dataContext.Locations.Add(location);
-                dataContext.SaveChanges();
-            }
+            location.Parent = db.Locations.Find(id);
+            db.Locations.Add(location);
+            db.SaveChanges();
         }
 
         // PUT api/locations/{id}
@@ -73,11 +61,8 @@ namespace OpenOrganizerAPI.Controllers
         {
             // TODO: Add data validation
             location.ID = id;
-            using (var dataContext = new APIDBContext())
-            {
-                dataContext.Locations.Update(location);
-                dataContext.SaveChanges();
-            }
+            db.Locations.Update(location);
+            db.SaveChanges();
         }
 
         // DELETE api/locations/{id}
@@ -86,11 +71,8 @@ namespace OpenOrganizerAPI.Controllers
         {
             Location location = new Location();
             location.ID = id;
-            using (var dataContext = new APIDBContext())
-            {
-                dataContext.Locations.Remove(location);
-                dataContext.SaveChanges();
-            }
+            db.Locations.Remove(location);
+            db.SaveChanges();
         }
     }
 }
