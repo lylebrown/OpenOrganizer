@@ -44,6 +44,11 @@ namespace OpenOrganizerAPI.Controllers
         public void Post([FromBody] ItemFieldValue value)
         {
             // TODO: Add data validation
+            int itemQuery = Convert.ToInt32(HttpContext.Request.Query["Item"]);
+            int itemFieldQuery = Convert.ToInt32(HttpContext.Request.Query["ItemField"]);
+
+            value.Item = db.Items.Find(itemQuery);
+            value.ItemField = db.ItemFields.Find(itemFieldQuery);
             db.ItemFieldValues.Add(value);
             db.SaveChanges();
         }

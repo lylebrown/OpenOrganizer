@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace OpenOrganizerAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class ItemsController : ControllerBase
     {
@@ -19,21 +19,42 @@ namespace OpenOrganizerAPI.Controllers
         }
         // GET api/items
         [HttpGet]
-        public ActionResult<List<Item>> Get()
+        public IActionResult Get()
         {
-            return db.Items
-                .Include(item => item.Category)
-                    .ThenInclude(cat => cat.Parent)
+            int limitQuery = Convert.ToInt32(HttpContext.Request.Query["Limit"]);
+            int startingAfterQuery = Convert.ToInt32(HttpContext.Request.Query["Starting_After"]);
+            // TODO: Add advanced search later, primitive search on all controllers like this for now.
+            string searchQuery = HttpContext.Request.Query["Search"].ToString().ToLower();
+
+            var searchCategoryIds = db.Categories.Where(c => c.Name.ToLower().Contains(searchQuery)).Select(c => c.ID);
+
+            var results = db.Items
+                    .Include(item => item.Category)
                         .ThenInclude(cat => cat.Parent)
-                .Include(item => item.Location)
-                    .ThenInclude(loc => loc.Parent)
+                            .ThenInclude(cat => cat.Parent)
+                    .Include(item => item.Location)
                         .ThenInclude(loc => loc.Parent)
-                .ToList();    
+                            .ThenInclude(loc => loc.Parent)
+                    .Where(result =>
+                        searchCategoryIds.Contains(result.Category.ID) 
+                        || result.Description.ToLower().Contains(searchQuery)
+                        || result.Title.ToLower().Contains(searchQuery));
+            if (startingAfterQuery > 0)
+            {
+                results = results.Skip(startingAfterQuery);
+            }
+            if (limitQuery > 0)
+            {
+                results = results.Take(limitQuery);
+            }
+            
+
+            return Ok(results);
         }
 
         // GET api/items/{id}
         [HttpGet("{id}")]
-        public ActionResult<Item> Get(int id)
+        public IActionResult Get(int id)
         {
             var itemItem = db.Items
                 .Include(item => item.Category)
@@ -49,7 +70,7 @@ namespace OpenOrganizerAPI.Controllers
                 return NotFound();
             }
 
-            return itemItem;
+            return Ok(itemItem);
         }
 
         // POST api/items
