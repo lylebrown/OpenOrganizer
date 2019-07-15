@@ -85,7 +85,7 @@ namespace OpenOrganizerAPI.Controllers
             item.Location = db.Locations.Find(locationQuery);
             db.Items.Add(item);
             db.SaveChanges();
-            return Ok(item);
+            return Ok(item.ID);
         }
 
         // PUT api/items/{id}
@@ -101,7 +101,7 @@ namespace OpenOrganizerAPI.Controllers
             item.Location = db.Locations.Find(locationQuery);
             db.Items.Update(item);
             db.SaveChanges();
-            return Ok(item);
+            return Ok(item.ID);
         }
 
         // DELETE api/items/{id}
