@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace OpenOrganizerAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class ItemFieldsController : ControllerBase
     {
@@ -19,18 +19,39 @@ namespace OpenOrganizerAPI.Controllers
         }
         // GET api/itemfields
         [HttpGet]
-        public ActionResult<List<ItemField>> Get()
+        public IActionResult Get()
         {
-            return db.ItemFields
-                .Include(field => field.Category)
-                    .ThenInclude(cat => cat.Parent)
+            int limitQuery = Convert.ToInt32(HttpContext.Request.Query["Limit"]);
+            int startingAfterQuery = Convert.ToInt32(HttpContext.Request.Query["Starting_After"]);
+            // TODO: Add advanced search later, primitive search on all controllers like this for now.
+            string searchQuery = HttpContext.Request.Query["Search"].ToString().ToLower();
+
+            var searchCategoryIds = db.ItemFields.Where(c => c.Name.ToLower().Contains(searchQuery)).Select(c => c.ID);
+
+            var results = db.ItemFields
+                    .Include(cat => cat.Category)
                         .ThenInclude(cat => cat.Parent)
-                .ToList();
+                            .ThenInclude(cat => cat.Parent)
+                    .Where(result =>
+                        searchCategoryIds.Contains(result.Category.ID)
+                        || result.Name.ToLower().Contains(searchQuery));
+
+            if (startingAfterQuery > 0)
+            {
+                results = results.Skip(startingAfterQuery);
+            }
+            if (limitQuery > 0)
+            {
+                results = results.Take(limitQuery);
+            }
+
+
+            return Ok(results);
         }
 
         // GET api/itemfields/{id}
         [HttpGet("{id}")]
-        public ActionResult<ItemField> Get(int id)
+        public IActionResult Get(int id)
         {
             var itemFieldItem = db.ItemFields
                 .Include(field => field.Category)
@@ -43,12 +64,12 @@ namespace OpenOrganizerAPI.Controllers
                 return NotFound();
             }
 
-            return itemFieldItem;
+            return Ok(itemFieldItem);
         }
 
         // POST api/itemfields
         [HttpPost]
-        public void Post([FromBody] ItemField itemField)
+        public IActionResult Post([FromBody] ItemField itemField)
         {
             // TODO: Add data validation
             int categoryQuery = Convert.ToInt32(HttpContext.Request.Query["Category"]);
@@ -56,29 +77,32 @@ namespace OpenOrganizerAPI.Controllers
             itemField.Category = db.Categories.Find(categoryQuery);
             db.ItemFields.Add(itemField);
             db.SaveChanges();
+            return Ok(itemField.ID);
         }
 
         // PUT api/itemfields/{id}
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] ItemField itemField)
+        public IActionResult Put(int id, [FromBody] ItemField itemField)
         {
             // TODO: Add data validation
-            itemField.ID = id;
             int categoryQuery = Convert.ToInt32(HttpContext.Request.Query["Category"]);
-
             itemField.Category = db.Categories.Find(categoryQuery);
+
+            itemField.ID = id;
             db.ItemFields.Update(itemField);
             db.SaveChanges();
+            return Ok(itemField.ID);
         }
 
         // DELETE api/itemfields/{id}
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult Delete(int id)
         {
             ItemField itemField = new ItemField();
             itemField.ID = id;
             db.ItemFields.Remove(itemField);
             db.SaveChanges();
+            return Ok();
         }
     }
 }
