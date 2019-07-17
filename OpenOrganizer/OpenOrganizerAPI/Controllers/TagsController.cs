@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace OpenOrganizerAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class TagsController : ControllerBase
     {
@@ -18,16 +18,16 @@ namespace OpenOrganizerAPI.Controllers
         }
         // GET api/tags
         [HttpGet]
-        public ActionResult<List<Tag>> Get()
+        public IActionResult Get()
         {
             List<Tag> dataTags = new List<Tag>();
             dataTags = db.Tags.ToList();
-            return dataTags;
+            return Ok(dataTags);
         }
 
         // GET api/tags/{id}
         [HttpGet("{id}")]
-        public ActionResult<Tag> Get(int id)
+        public IActionResult Get(int id)
         {
             var tagsItem = db.Tags.Find(id);
 
@@ -36,36 +36,39 @@ namespace OpenOrganizerAPI.Controllers
                 return NotFound();
             }
 
-            return tagsItem;
+            return Ok(tagsItem);
         }
 
         // POST api/tags
         [HttpPost]
-        public void Post([FromBody] Tag tag)
+        public IActionResult Post([FromBody] Tag tag)
         {
             // TODO: Add data validation
             db.Tags.Add(tag);
             db.SaveChanges();
+            return Ok(tag.ID);
         }
 
         // PUT api/tags/{id}
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] Tag tag)
+        public IActionResult Put(int id, [FromBody] Tag tag)
         {
             // TODO: Add data validation
             tag.ID = id;
             db.Tags.Update(tag);
             db.SaveChanges();
+            return Ok(tag.ID);
         }
 
         // DELETE api/tags/{id}
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult Delete(int id)
         {
             Tag tag = new Tag();
             tag.ID = id;
             db.Tags.Remove(tag);
             db.SaveChanges();
+            return Ok();
         }
     }
 }
