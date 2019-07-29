@@ -29,6 +29,8 @@ namespace OpenOrganizerAPI
             services.AddDbContext<APIDBContext>(options =>
                 options.UseSqlite(
                     Configuration.GetConnectionString("Database")));
+            services.AddCors();
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -38,6 +40,8 @@ namespace OpenOrganizerAPI
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseCors(options => options.WithOrigins("http://localhost:50438").AllowAnyMethod());
 
             app.UseRouting();
 
