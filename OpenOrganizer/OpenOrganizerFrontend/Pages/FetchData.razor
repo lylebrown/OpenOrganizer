@@ -5,35 +5,6 @@
 
 <p>This component demonstrates fetching data from the server.</p>
 
-@if (forecasts == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Temp. (C)</th>
-                <th>Temp. (F)</th>
-                <th>Summary</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var forecast in forecasts)
-            {
-                <tr>
-                    <td>@forecast.Date.ToShortDateString()</td>
-                    <td>@forecast.TemperatureC</td>
-                    <td>@forecast.TemperatureF</td>
-                    <td>@forecast.Summary</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
-
 @if (categories == null)
 {
     <p><em>Loading Cats...</em></p>
@@ -46,16 +17,21 @@ else
                 <th>Id</th>
                 <th>Name</th>
                 <th>Parent</th>
+                <th>Parent Name</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var category in categories)
             {
+                string parentName;
                 <tr>
                     <td>@category.ID</td>
                     <td>@category.Name</td>
                     <td>@category.Parent</td>
-                </tr>
+                    @if (category.Parent != null) { parentName = category.Parent.Name; } else { parentName = "N/A"; }
+                    <td>@parentName</td>
+
+               </tr>
             }
         </tbody>
     </table>
@@ -65,24 +41,12 @@ else
 
 
 
-    WeatherForecast[] forecasts;
+
     Category[] categories;
 
     protected override async Task OnInitAsync()
     {
-        forecasts = await Http.GetJsonAsync<WeatherForecast[]>("sample-data/weather.json");
         categories = await Http.GetJsonAsync<Category[]>("http://localhost:54425/api/v1/Categories");
-    }
-
-    class WeatherForecast
-    {
-        public DateTime Date { get; set; }
-
-        public int TemperatureC { get; set; }
-
-        public int TemperatureF { get; set; }
-
-        public string Summary { get; set; }
     }
 
     class Category
