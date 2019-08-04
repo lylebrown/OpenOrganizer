@@ -41,7 +41,7 @@ namespace OpenOrganizerAPI
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseCors(options => options.WithOrigins("http://localhost:50438").AllowAnyMethod());
+            app.UseCors(options => options.WithOrigins("http://localhost:50438").AllowAnyMethod().AllowAnyHeader());
 
             app.UseRouting();
 
