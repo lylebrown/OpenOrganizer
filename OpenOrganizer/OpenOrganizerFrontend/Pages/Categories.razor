@@ -1,0 +1,63 @@
+﻿@page "/categories"
+@inject HttpClient Http
+
+<h1>Categories</h1>
+
+@if (categories == null)
+{
+    <p><em>Loading Categories...</em></p>
+}
+else
+{
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Manage Categories</h5>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Parent</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var category in categories)
+                    {
+                        string parentName;
+                        int parentID;
+                        string rowId = "row" + category.ID;
+                        <tr id="@rowId">
+                            <td>@category.Name</td>
+                            @if (category.Parent != null) { parentName = category.Parent.Name; parentID = category.Parent.ID; }
+                            else { parentName = "N/A"; parentID = 0; }
+                            <td>@parentName</td>
+                            <td><span class="oi oi-data-transfer-download" aria-hidden="true"></span></td>
+                            <td><span class="oi oi-delete" aria-hidden="true" @onclick="@(e => DeleteAsync(category.ID))"></span></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+@code {
+    Category[] categories;
+
+    protected override async Task OnInitializedAsync()
+    {
+        categories = await Http.GetJsonAsync<Category[]>("http://localhost:54425/api/v1/Categories");
+    }
+
+    protected async Task DeleteAsync(int id)
+    {
+        await Http.DeleteAsync("Http://localhost:54425/api/v1/Categories/" + id);
+    }
+
+    class Category
+    {
+        public int ID { get; set; }
+        public string Name { get; set; }
+        public Category Parent { get; set; }
+    }
+}

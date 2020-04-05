@@ -16,7 +16,6 @@ else
             <tr>
                 <th>Id</th>
                 <th>Name</th>
-                <th>Parent</th>
                 <th>Parent Name</th>
             </tr>
         </thead>
@@ -27,7 +26,6 @@ else
                 <tr>
                     <td>@category.ID</td>
                     <td>@category.Name</td>
-                    <td>@category.Parent</td>
                     @if (category.Parent != null) { parentName = category.Parent.Name; } else { parentName = "N/A"; }
                     <td>@parentName</td>
 
@@ -38,13 +36,9 @@ else
 }
 
 @code {
-
-
-
-
     Category[] categories;
 
-    protected override async Task OnInitAsync()
+    protected override async Task OnInitializedAsync()
     {
         categories = await Http.GetJsonAsync<Category[]>("http://localhost:54425/api/v1/Categories");
     }
